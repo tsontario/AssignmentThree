@@ -23,6 +23,10 @@ public class GameView extends JFrame {
      */
     private BoardView board;
     private GameModel gameModel;
+    private GameController controller;
+
+    private JButton buttonUndo;
+    private JButton buttonRedo;
  
   
     /**
@@ -36,6 +40,7 @@ public class GameView extends JFrame {
 
     public GameView(GameModel model, GameController gameController) {
         super("Circle the Dot");
+        controller = gameController;
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     	setBackground(Color.WHITE);
@@ -53,11 +58,12 @@ public class GameView extends JFrame {
         buttonExit.setFocusPainted(false);
         buttonExit.addActionListener(gameController);
 
-        JButton buttonUndo = new JButton("Undo");
+        buttonUndo = new JButton("Undo");
         buttonUndo.setFocusPainted(false);
+        buttonUndo.setEnabled(false);
         buttonUndo.addActionListener(gameController);
 
-        JButton buttonRedo = new JButton("Redo");
+        buttonRedo = new JButton("Redo");
         buttonRedo.setFocusPainted(false);
         buttonRedo.addActionListener(gameController);
 
@@ -71,14 +77,6 @@ public class GameView extends JFrame {
         control.add(buttonRedo);
     	add(control, BorderLayout.SOUTH);
 
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                super.windowClosing(e);
-                saveOnClose();
-            }
-        });
-
     	pack();
     	setResizable(false);
     	setVisible(true);
@@ -87,7 +85,6 @@ public class GameView extends JFrame {
 
 
     public void update() {
-        updateUndoRedoButtons();
         board.update();
   
     }
@@ -98,12 +95,19 @@ public class GameView extends JFrame {
 
     }
 
-    public void updateUndoRedoButtons() {
-
+    public void enableUndoButton() {
+        buttonUndo.setEnabled(true);
     }
 
-    private void saveOnClose() {
-        gameModel.writeObject();
+    public void disableUndoButton() {
+        buttonUndo.setEnabled(false);
     }
 
+    public void disableRedoButton() {
+        buttonRedo.setEnabled(false);
+    }
+
+    public void enableRedoButton() {
+        buttonRedo.setEnabled(true);
+    }
 }

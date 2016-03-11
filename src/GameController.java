@@ -1,5 +1,6 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
 import java.util.LinkedList;
 
 import javax.swing.*;
@@ -17,7 +18,7 @@ import javax.swing.*;
 public class GameController implements ActionListener {
 
     // TODO M'custom fields for Stack/Queue Undo/Redo
-    private LinkedQueue<GameModel> redoQueue;
+    private LinkedStack<GameModel> redoStack;
     private LinkedStack<GameModel> undoStack;
 
     /**
@@ -39,9 +40,9 @@ public class GameController implements ActionListener {
      *            the size of the board on which the game will be played
      */
     public GameController(int size) {
-        gameModel = new GameModel(size);
+        gameModel = createOrLoadModel(size);
         gameView = new GameView(gameModel, this);
-        redoQueue = new LinkedQueue<GameModel>();
+        redoStack = new LinkedStack<GameModel>();
         undoStack = new LinkedStack<GameModel>();
         gameView.update();
     }
@@ -52,6 +53,8 @@ public class GameController implements ActionListener {
      * resets the game
      */
     public void reset(){
+        redoStack = new LinkedStack<>();
+        undoStack = new LinkedStack<>();
         gameModel.reset();
         gameView.update();
     }
@@ -79,16 +82,16 @@ public class GameController implements ActionListener {
             JButton clicked = (JButton)(e.getSource());
 
             if (clicked.getText().equals("Quit")) {
+                if (gameModel.getCurrentDot().getX() != -1) {
+                    writeObject();
+                }
                  System.exit(0);
             }
             else if (clicked.getText().equals("Reset")){
                 reset();
             }
-            // TODO need DEEP-COPIES of pushed gameModel, otherwise everything is being updated and is worthless.
-            // TODO We don't want to create a new window every time, we just want to update the gameView's model ref
             else if (clicked.getText().equals("Undo")) {
                 undo();
-
             }
             else if (clicked.getText().equals("Redo")) {
                 redo();
@@ -106,6 +109,11 @@ public class GameController implements ActionListener {
      */
     private void oneStep(){
         Point currentDot = gameModel.getCurrentDot();
+
+        // Destroys old redoStack on new move.
+        redoStack = new LinkedStack<>();
+        gameView.disableRedoButton();
+
         if(isOnBorder(currentDot)) {
             gameModel.setCurrentDot(-1,-1);
             gameView.update();
@@ -279,6 +287,7 @@ public class GameController implements ActionListener {
         try {
         GameModel lastModel = (GameModel) model.clone();
         undoStack.push(lastModel);
+        gameView.enableUndoButton();
         }
         catch (CloneNotSupportedException e) {
             e.printStackTrace();
@@ -286,16 +295,71 @@ public class GameController implements ActionListener {
     }
 
     public void undo() {
-
+        redoStack.push(gameModel);
         gameModel = undoStack.pop();
-
-
         gameView.setModel(gameModel);
+        if (undoStack.isEmpty()) {
+            gameView.disableUndoButton();
+        }
+
+
+        gameView.enableRedoButton();
         gameView.update();
 
     }
 
     public void redo() {
+        undoStack.push(gameModel);
+        gameView.enableUndoButton();
+        gameModel = redoStack.pop();
 
+        gameView.setModel(gameModel);
+        if (redoStack.isEmpty()) {
+            gameView.disableRedoButton();
+        }
+        gameView.update();
+    }
+
+    private GameModel createOrLoadModel(int size) {
+        File saveFile = new File("./savedGame.ser");
+        if (saveFile.exists()) {
+            gameModel = readObj(saveFile);
+            saveFile.delete();
+            return gameModel;
+        }
+        else {
+            return new GameModel(size);
+        }
+    }
+
+    private GameModel readObj(File saveFile) {
+        try {
+            FileInputStream fileIn = new FileInputStream(saveFile);
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            GameModel model = (GameModel) in.readObject();
+            fileIn.close();
+            in.close();
+            return model;
+        }
+        catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void writeObject() {
+        try {
+            FileOutputStream fileOut = new FileOutputStream("./savedgame.ser");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(gameModel);
+            out.close();
+            fileOut.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

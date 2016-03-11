@@ -19,7 +19,7 @@ public class CircleTheDot {
      public static void main(String[] args) {
         int size = 9;
         if (args.length == 1) {
-            try{
+            try {
                 size = Integer.parseInt(args[0]);
                 if(size<4){
                     System.out.println("Invalide argument, using default...");
