@@ -16,7 +16,7 @@ import java.util.Random;
  *
  * @author Guy-Vincent Jourdan, University of Ottawa
  */
-public class GameModel {
+public class GameModel implements Cloneable {
 
 
     /**
@@ -203,6 +203,22 @@ public class GameModel {
         return numberOfSteps;
     }
 
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+
+        GameModel cloneModel = (GameModel) super.clone();
+        cloneModel.model = model.clone();
+        cloneModel.currentDot = (Point) currentDot.clone();
+
+        // Each entry of the array is in itself an object.
+        // Therefore we must clone each "row" as well.
+        for (int i=0; i< sizeOfGame; i++) {
+            cloneModel.model[i] = model[i].clone();
+        }
+
+        return cloneModel;
+
+    }
 
 
 }

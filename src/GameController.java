@@ -71,6 +71,7 @@ public class GameController implements ActionListener {
 
         	if (gameModel.getCurrentStatus(clicked.getColumn(),clicked.getRow()) ==
                     GameModel.AVAILABLE){
+                pushToUndoStack(gameModel);
                 gameModel.select(clicked.getColumn(),clicked.getRow());
                 oneStep();
             }
@@ -84,12 +85,13 @@ public class GameController implements ActionListener {
                 reset();
             }
             // TODO need DEEP-COPIES of pushed gameModel, otherwise everything is being updated and is worthless.
+            // TODO We don't want to create a new window every time, we just want to update the gameView's model ref
             else if (clicked.getText().equals("Undo")) {
-                gameModel = undoStack.pop();
-                gameView.update();
+                undo();
+
             }
             else if (clicked.getText().equals("Redo")) {
-
+                redo();
             }
         } 
     }
@@ -148,9 +150,8 @@ public class GameController implements ActionListener {
                 }
             }
             else {
-                gameModel.setCurrentDot(direction.getX(), direction.getY());
-                pushToUndoStack(gameModel);
 
+                gameModel.setCurrentDot(direction.getX(), direction.getY());
                 gameView.update();
             }
         }
@@ -275,6 +276,26 @@ public class GameController implements ActionListener {
 
     private void pushToUndoStack(GameModel model) {
 
+        try {
+        GameModel lastModel = (GameModel) model.clone();
+        undoStack.push(lastModel);
+        }
+        catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
     }
 
+    public void undo() {
+
+        gameModel = undoStack.pop();
+
+
+        gameView.setModel(gameModel);
+        gameView.update();
+
+    }
+
+    public void redo() {
+
+    }
 }
