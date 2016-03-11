@@ -1,6 +1,8 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.*;
 
@@ -69,6 +71,14 @@ public class GameView extends JFrame {
         control.add(buttonRedo);
     	add(control, BorderLayout.SOUTH);
 
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                saveOnClose();
+            }
+        });
+
     	pack();
     	setResizable(false);
     	setVisible(true);
@@ -76,7 +86,8 @@ public class GameView extends JFrame {
     }
 
 
-    public void update(){
+    public void update() {
+        updateUndoRedoButtons();
         board.update();
   
     }
@@ -85,6 +96,14 @@ public class GameView extends JFrame {
         gameModel = model;
         board.setModel(gameModel);
 
+    }
+
+    public void updateUndoRedoButtons() {
+
+    }
+
+    private void saveOnClose() {
+        gameModel.writeObject();
     }
 
 }

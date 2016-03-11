@@ -1,3 +1,4 @@
+import java.io.Serializable;
 
 /**
  * The class <b>Point</b> is a simple helper class that stares a 2 dimentional element on a grid
@@ -5,7 +6,7 @@
  * @author Guy-Vincent Jourdan, University of Ottawa
  */
 
-public class Point implements Cloneable {
+public class Point implements Cloneable, Serializable {
 
     /**
      * The coordinate of this point.

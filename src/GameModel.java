@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.Random;
 
 /**
@@ -16,7 +17,7 @@ import java.util.Random;
  *
  * @author Guy-Vincent Jourdan, University of Ottawa
  */
-public class GameModel implements Cloneable {
+public class GameModel implements Cloneable, Serializable {
 
 
     /**
@@ -220,5 +221,18 @@ public class GameModel implements Cloneable {
 
     }
 
+    public void writeObject() {
+        try {
+            FileOutputStream fileOut = new FileOutputStream("./data.txt");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(this);
+            out.close();
+            fileOut.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 }
