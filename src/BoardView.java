@@ -78,7 +78,6 @@ public class BoardView extends JPanel {
 		   	}
 		}
 		repaint();
-		System.out.println("Updating method ID of gameModel: " + this.gameModel);
     }
 
 	public void setModel(GameModel model) {

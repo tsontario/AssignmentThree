@@ -1,6 +1,5 @@
-import java.util.EmptyStackException;
 
-public class LinkedStack<E> implements Stack<E>{
+public class LinkedStack<E> implements Stack<E> {
 
     private static class Elem<T>{
         private T info;
@@ -25,11 +24,18 @@ public class LinkedStack<E> implements Stack<E>{
 
     public void push( E info ) {
 
-        top = new Elem<E>( info, top );
+        if (info == null) {
+            throw new NullPointerException();
+        }
+        top = new Elem<E>(info, top);
+
+
     }
 
-    public E peek() {
-
+    public E peek()  {
+        if (isEmpty()) {
+            throw new NullPointerException();
+        }
         return top.info;
     }
 
@@ -39,7 +45,6 @@ public class LinkedStack<E> implements Stack<E>{
             if (isEmpty()) {
                 throw new EmptyStackException();
             }
-
             E savedInfo = top.info;
 
             Elem<E> oldTop = top;
@@ -54,7 +59,6 @@ public class LinkedStack<E> implements Stack<E>{
         }
         catch (EmptyStackException e) {
             System.out.println("Error, stack is empty!");
-            e.printStackTrace();
         }
         return null;
     }

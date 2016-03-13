@@ -14,7 +14,8 @@ public class LinkedQueue<E> implements Queue<E> {
     private Elem<E> front;
     private Elem<E> rear;
 
-    public E peek() {
+    public E peek() throws EmptyQueueException {
+
         return front.value;
     }
 
@@ -30,7 +31,7 @@ public class LinkedQueue<E> implements Queue<E> {
         }
     }
 
-    public E dequeue() {
+    public E dequeue() throws EmptyQueueException {
 
         try {
 

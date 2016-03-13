@@ -65,6 +65,7 @@ public class GameView extends JFrame {
 
         buttonRedo = new JButton("Redo");
         buttonRedo.setFocusPainted(false);
+        buttonRedo.setEnabled(false);
         buttonRedo.addActionListener(gameController);
 
 

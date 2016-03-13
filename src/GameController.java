@@ -56,6 +56,9 @@ public class GameController implements ActionListener {
         redoStack = new LinkedStack<>();
         undoStack = new LinkedStack<>();
         gameModel.reset();
+
+        gameView.disableUndoButton();
+        gameView.disableRedoButton();
         gameView.update();
     }
 
@@ -285,39 +288,61 @@ public class GameController implements ActionListener {
     private void pushToUndoStack(GameModel model) {
 
         try {
-        GameModel lastModel = (GameModel) model.clone();
-        undoStack.push(lastModel);
-        gameView.enableUndoButton();
+            GameModel lastModel = (GameModel) model.clone();
+            undoStack.push(lastModel);
+            gameView.enableUndoButton();
         }
         catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
+        catch (NullPointerException e) {
+            return;
+        }
     }
 
     public void undo() {
-        redoStack.push(gameModel);
-        gameModel = undoStack.pop();
-        gameView.setModel(gameModel);
-        if (undoStack.isEmpty()) {
+        try {
+            redoStack.push(gameModel);
+            gameModel = undoStack.pop();
+            gameView.setModel(gameModel);
+            if (undoStack.isEmpty()) {
+                gameView.disableUndoButton();
+            }
+            gameView.enableRedoButton();
+            gameView.update();
+        } catch (EmptyStackException e) {
             gameView.disableUndoButton();
+            return;
+        }
+        catch (NullPointerException e) {
+            gameView.disableUndoButton();
+            return;
         }
 
 
-        gameView.enableRedoButton();
-        gameView.update();
 
     }
 
     public void redo() {
-        undoStack.push(gameModel);
-        gameView.enableUndoButton();
-        gameModel = redoStack.pop();
+        try {
+            undoStack.push(gameModel);
+            gameView.enableUndoButton();
+            gameModel = redoStack.pop();
 
-        gameView.setModel(gameModel);
-        if (redoStack.isEmpty()) {
+            gameView.setModel(gameModel);
+            if (redoStack.isEmpty()) {
+                gameView.disableRedoButton();
+            }
+            gameView.update();
+        }
+        catch (NullPointerException e) {
+            System.out.println("Cannot push null elements to stack");
             gameView.disableRedoButton();
         }
-        gameView.update();
+        catch (EmptyStackException e) {
+            System.out.println("Error. Stack is empty");
+            gameView.disableRedoButton();
+        }
     }
 
     private GameModel createOrLoadModel(int size) {
