@@ -293,10 +293,22 @@ public class GameController implements ActionListener {
             gameView.enableUndoButton();
         }
         catch (CloneNotSupportedException e) {
-            e.printStackTrace();
+            JOptionPane.showOptionDialog(gameView,
+                    "Error cloning game state in undo method.",
+                    "Stack Error",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.ERROR_MESSAGE,
+                    null,
+                    null,null);
         }
         catch (NullPointerException e) {
-            return;
+            JOptionPane.showOptionDialog(gameView,
+                    "Error cloning game state in undo method.",
+                    "Stack Error",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.ERROR_MESSAGE,
+                    null,
+                    null,null);
         }
     }
 
@@ -311,12 +323,13 @@ public class GameController implements ActionListener {
             gameView.enableRedoButton();
             gameView.update();
         } catch (EmptyStackException e) {
+            displayError("No moves to undo.");
             gameView.disableUndoButton();
-            return;
+
         }
         catch (NullPointerException e) {
+            displayError("No moves to undo.");
             gameView.disableUndoButton();
-            return;
         }
 
 
@@ -336,11 +349,11 @@ public class GameController implements ActionListener {
             gameView.update();
         }
         catch (NullPointerException e) {
-            System.out.println("Cannot push null elements to stack");
+            displayError("Cannot push null elements to stack");
             gameView.disableRedoButton();
         }
         catch (EmptyStackException e) {
-            System.out.println("Error. Stack is empty");
+            displayError("Error. Stack is empty");
             gameView.disableRedoButton();
         }
     }
@@ -362,15 +375,16 @@ public class GameController implements ActionListener {
             FileInputStream fileIn = new FileInputStream(saveFile);
             ObjectInputStream in = new ObjectInputStream(fileIn);
             GameModel model = (GameModel) in.readObject();
+
             fileIn.close();
             in.close();
             return model;
         }
         catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            displayError("Error reading file. Data may be corrupted.");
         }
         catch (IOException e) {
-            e.printStackTrace();
+            displayError("Error reading file. Please try again.");
         }
         return null;
     }
@@ -384,7 +398,18 @@ public class GameController implements ActionListener {
             fileOut.close();
         }
         catch (IOException e) {
-            e.printStackTrace();
+            displayError("Error saving to file.");
         }
+    }
+
+
+    private void displayError(String message) {
+        JOptionPane.showOptionDialog(gameView,
+                message,
+                "Error",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.ERROR_MESSAGE,
+                null,
+                null,null);
     }
 }

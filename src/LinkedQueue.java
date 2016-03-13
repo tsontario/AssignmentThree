@@ -14,14 +14,21 @@ public class LinkedQueue<E> implements Queue<E> {
     private Elem<E> front;
     private Elem<E> rear;
 
-    public E peek() throws EmptyQueueException {
+    public E peek() {
 
+        if (front.value == null && rear.value == null) {
+            throw new EmptyQueueException();
+        }
         return front.value;
     }
 
     public void enqueue( E o ) {
         Elem<E> newElem;
         newElem = new Elem<E>( o, null );
+
+        if (newElem == null) {
+            throw new NullPointerException();
+        }
 
         if ( rear == null ) {
             front = rear = newElem;

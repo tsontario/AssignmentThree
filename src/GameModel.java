@@ -27,6 +27,7 @@ public class GameModel implements Cloneable, Serializable {
     public static final int SELECTED    = 1;
     public static final int DOT         = 2;
 
+
     /**
      * The probability that an available cell will be initially selected
      */

@@ -34,32 +34,27 @@ public class LinkedStack<E> implements Stack<E> {
 
     public E peek()  {
         if (isEmpty()) {
-            throw new NullPointerException();
+            throw new EmptyStackException();
         }
         return top.info;
     }
 
     public E pop() {
 
-        try {
-            if (isEmpty()) {
-                throw new EmptyStackException();
-            }
-            E savedInfo = top.info;
-
-            Elem<E> oldTop = top;
-            Elem<E> newTop = top.next;
-
-            top = newTop;
-
-            oldTop.info = null; // scrubbing the memory
-            oldTop.next = null; // scrubbing the memory
-
-            return savedInfo;
+        if (isEmpty()) {
+            throw new EmptyStackException();
         }
-        catch (EmptyStackException e) {
-            System.out.println("Error, stack is empty!");
-        }
-        return null;
+        E savedInfo = top.info;
+
+        Elem<E> oldTop = top;
+        Elem<E> newTop = top.next;
+
+        top = newTop;
+
+        oldTop.info = null; // scrubbing the memory
+        oldTop.next = null; // scrubbing the memory
+
+        return savedInfo;
     }
+
 }
