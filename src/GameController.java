@@ -17,7 +17,6 @@ import javax.swing.*;
 
 public class GameController implements ActionListener {
 
-    // TODO M'custom fields for Stack/Queue Undo/Redo
     private LinkedStack<GameModel> redoStack;
     private LinkedStack<GameModel> undoStack;
 
@@ -189,7 +188,7 @@ public class GameController implements ActionListener {
 
         Queue<Pair<Point>> myQueue = new LinkedQueue<Pair<Point>>();
         
-        LinkedList<Point> possibleNeighbours = new  LinkedList<Point>();
+        LinkedList<Point> possibleNeighbours = new LinkedList<Point>();
 
         // start with neighbours of the current dot
         // (note: we know the current dot isn't on the border)
