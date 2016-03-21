@@ -284,6 +284,10 @@ public class GameController implements ActionListener {
         return list;
     }
 
+    /**
+     * Push the current state of the Game Model onto the undo stack
+     * @param model The Game Model
+     */
     private void pushToUndoStack(GameModel model) {
 
         try {
@@ -311,6 +315,10 @@ public class GameController implements ActionListener {
         }
     }
 
+    /**
+     * Revert the Game Model back one previous state. the undo function will also push the state being undone onto
+     * the redo stack
+     */
     public void undo() {
         try {
             redoStack.push(gameModel);
@@ -330,11 +338,12 @@ public class GameController implements ActionListener {
             displayError("No moves to undo.");
             gameView.disableUndoButton();
         }
-
-
-
     }
 
+    /**
+     * Revert the Game Model to the previously undone state. Redo will also push the current Game Model onto the
+     * undo stack
+     */
     public void redo() {
         try {
             undoStack.push(gameModel);
@@ -357,6 +366,12 @@ public class GameController implements ActionListener {
         }
     }
 
+    /**
+     * Checks to see if 'savedgame.ser' exists in the program directory and loads it. If the file does not exist,
+     * a new game is created
+     * @param size the size of the game to be created (ignored if loading from save file)
+     * @return
+     */
     private GameModel createOrLoadModel(int size) {
         File saveFile = new File("./savedGame.ser");
         if (saveFile.exists()) {
@@ -369,6 +384,11 @@ public class GameController implements ActionListener {
         }
     }
 
+    /**
+     * Read saveFile and return the GameModel object it represents
+     * @param saveFile the name of the file to be read
+     * @return the saved GameModel object
+     */
     private GameModel readObj(File saveFile) {
         try {
             FileInputStream fileIn = new FileInputStream(saveFile);
@@ -388,6 +408,9 @@ public class GameController implements ActionListener {
         return null;
     }
 
+    /**
+     * Write the current Game Model to 'savedgame.ser'
+     */
     public void writeObject() {
         try {
             FileOutputStream fileOut = new FileOutputStream("./savedgame.ser");
@@ -402,6 +425,10 @@ public class GameController implements ActionListener {
     }
 
 
+    /**
+     * Utility method for displaying errors and exceptions. Creates a dialog with a custom error message
+     * @param message the error message to be displayed
+     */
     private void displayError(String message) {
         JOptionPane.showOptionDialog(gameView,
                 message,

@@ -84,30 +84,46 @@ public class GameView extends JFrame {
 
     }
 
-
+    /**
+     * Update the Board View
+     */
     public void update() {
         board.update();
-  
     }
 
+    /**
+     * Set the GameModel to be represented by the BoardView
+     * @param model the game model
+     */
     public void setModel(GameModel model) {
         gameModel = model;
         board.setModel(gameModel);
-
     }
 
+    /**
+     * Enable clicks on the undo button
+     */
     public void enableUndoButton() {
         buttonUndo.setEnabled(true);
     }
 
+    /**
+     * Disable clicks on the undo button
+     */
     public void disableUndoButton() {
         buttonUndo.setEnabled(false);
     }
 
+    /**
+     * Disable clicks on the redo button
+     */
     public void disableRedoButton() {
         buttonRedo.setEnabled(false);
     }
 
+    /**
+     * Enable clicks on the redo button
+     */
     public void enableRedoButton() {
         buttonRedo.setEnabled(true);
     }

@@ -65,6 +65,10 @@ public class Point implements Cloneable, Serializable {
         this.y = y;
     }
 
+    /**
+     * Create a deep-copy of the Point object
+     * @return a deep-copy of the Point Object
+     */
     @Override
     public Object clone() {
         try {

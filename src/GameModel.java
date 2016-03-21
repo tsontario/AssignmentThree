@@ -205,6 +205,11 @@ public class GameModel implements Cloneable, Serializable {
         return numberOfSteps;
     }
 
+    /**
+     * Create a deep-copy of the current Game Model
+     * @return a deep-copy of the Game Model
+     * @throws CloneNotSupportedException
+     */
     @Override
     public Object clone() throws CloneNotSupportedException {
 

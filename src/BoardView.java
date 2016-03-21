@@ -80,6 +80,10 @@ public class BoardView extends JPanel {
 		repaint();
     }
 
+	/**
+	 * Sets the Game Model to be represented by the BoardView
+	 * @param model the game model to be represented
+     */
 	public void setModel(GameModel model) {
 		gameModel = model;
 	}
